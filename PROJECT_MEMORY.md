@@ -1,10 +1,10 @@
 # Project Memory: agentic-screen-context
 
 ## Estado Actual del Proyecto
-- **Versión:** v0.1.0
+- **Versión:** v0.1.0 (MVP Completado & Verificado)
 - **Repositorio:** `https://github.com/ClaudioCeppi83/agentic-screen-context`
-- **Fecha de Inicio:** 2026-09-13
-- **Fase Actual:** Fase 1 (Configuración de Entorno, Repositorio e Interfaces)
+- **Última Actualización:** 2026-09-13
+- **Fase Actual:** Fase 4 (Verificación Integral Completada: 20/20 tests pasando)
 
 ---
 
@@ -24,3 +24,7 @@
 ### ADR-003: Enriquecimiento Local con Contexto (+/- 15 líneas)
 - **Contexto:** El texto del OCR por sí solo carece de contexto de ejecución para que una IA entienda el bug.
 - **Decisión:** Localizar el archivo en el repositorio con `fuzzysort` y extraer +/- 15 líneas alrededor de la línea epicentro junto a los imports superiores.
+
+### ADR-004: Resiliencia de OCR y Fallback a Buffer de Portapapeles
+- **Contexto:** En entornos sin display activo o cuando la imagen capturada está vacía / corrupta, Tesseract.js arroja excepciones no controladas.
+- **Decisión:** Detección temprana de buffers vacíos y manejo en bloque try/catch en `parser.ts` para retornar un contexto visual vacío controlado, activando de inmediato el fallback al buffer existente del portapapeles y el árbol de archivos local.
