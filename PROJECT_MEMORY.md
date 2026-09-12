@@ -1,0 +1,26 @@
+# Project Memory: agentic-screen-context
+
+## Estado Actual del Proyecto
+- **Versión:** v0.1.0
+- **Repositorio:** `https://github.com/ClaudioCeppi83/agentic-screen-context`
+- **Fecha de Inicio:** 2026-09-13
+- **Fase Actual:** Fase 1 (Configuración de Entorno, Repositorio e Interfaces)
+
+---
+
+## Decisiones de Arquitectura Clave (ADRs)
+
+### ADR-001: Captura Nativa de Pantalla Cross-Platform
+- **Contexto:** Evitar dependencias masivas como Puppeteer o Electron que requieren cientos de megabytes y compilaciones de binarios pesados.
+- **Decisión:** Utilizar ejecutables nativos del SO:
+  - Linux: `maim -i` / `xdotool` en X11 y `grim` en Wayland.
+  - macOS: `/usr/sbin/screencapture`.
+  - Windows: Script PowerShell inline usando `System.Drawing` y `GetForegroundWindow`.
+
+### ADR-002: Motor de OCR Híbrido (Local WASM + Gemini Flash API)
+- **Contexto:** Se requiere procesamiento sin costo ni requerimiento de internet por defecto, pero con alta precisión si hay API key.
+- **Decisión:** `tesseract.js` en WebAssembly para modo local, con fallback / mejora opcional a `gemini-1.5-flash` si `GEMINI_API_KEY` está configurada en el entorno.
+
+### ADR-003: Enriquecimiento Local con Contexto (+/- 15 líneas)
+- **Contexto:** El texto del OCR por sí solo carece de contexto de ejecución para que una IA entienda el bug.
+- **Decisión:** Localizar el archivo en el repositorio con `fuzzysort` y extraer +/- 15 líneas alrededor de la línea epicentro junto a los imports superiores.
